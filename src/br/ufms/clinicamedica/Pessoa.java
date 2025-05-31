@@ -8,13 +8,11 @@ public class Pessoa {
     private String telefone;
     private LocalDate dataNascimento;
 
-
-
-    public Pessoa(String nome, String cpf ) {
+    protected Pessoa(String nome, String cpf ) {
         this(nome, cpf, null, null, null);
 
     }
-    public Pessoa(String nome, String cpf, Endereco endereco, String telefone, LocalDate dataNascimento ){
+    protected Pessoa(String nome, String cpf, Endereco endereco, String telefone, LocalDate dataNascimento ){
         setNome(nome);
         setEndereco(endereco);
         setTelefone(telefone);
@@ -110,7 +108,6 @@ public class Pessoa {
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof Pessoa pessoa)) return false;
-
         return cpf.equals(pessoa.cpf);
     }
 

@@ -1,7 +1,6 @@
 package br.ufms.clinicamedica;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class Paciente extends Pessoa {
@@ -12,24 +11,6 @@ public class Paciente extends Pessoa {
     public Paciente(String nome, String cpf, Endereco endereco, String telefone, LocalDate dataNascimento){
     super(nome,cpf,endereco,telefone,dataNascimento);
 
-    }
-    public SolicitarConsulta solicitarConsulta(Medico medico, Paciente paciente, String sintomas, LocalDateTime dataHoraSolicitada, double valor){
-        System.out.println("Consulta solicitada!");
-        return new SolicitarConsulta( medico, paciente, sintomas, dataHoraSolicitada, valor);
-    }
-
-    public String visualizarReceitas(Consulta consulta, Paciente paciente) {
-        if (consulta == null && paciente == null){
-            throw new IllegalArgumentException("Consulta ou paciente não informado");
-        }
-        return consulta.getReceita();
-    }
-
-    public List<String> visualizarExames(Consulta consulta, Paciente paciente) {
-        if (consulta == null && paciente == null){
-            throw new IllegalArgumentException("Consulta ou paciente não informado");
-        }
-        return consulta.getExames();
     }
 
     @Override

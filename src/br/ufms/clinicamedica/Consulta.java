@@ -2,6 +2,8 @@ package br.ufms.clinicamedica;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Consulta {
 
@@ -14,45 +16,23 @@ public class Consulta {
     private String receita;
     private List<String> exames;
 
-    public Consulta(Medico medico, Paciente paciente, String sintomas, LocalDateTime dataHora, double valor) {
-        this.codigo = ++gerarCodigo;
+    private static long proximoCodigo = 0;
+
+    public Consulta(Medico medico, Paciente paciente, String sintomas, LocalDateTime dataHora) {
+        this.codigo = ++proximoCodigo;
         this.medico = medico;
         this.paciente = paciente;
-        setSintomas(sintomas);
-        setDataHora(dataHora);
-        setValor(valor);
-        setReceita(receita);
-        setExames(exames);
-    }
-    public Consulta (Medico medico, Paciente paciente, String sintomas, LocalDateTime dataHora, double valor, String receita, List<String> exames){
-        this.codigo = ++gerarCodigo;
-        this.medico = medico;
-        this.paciente = paciente;
-        setSintomas(sintomas);
-        setDataHora(dataHora);
-        setValor(valor);
-        setReceita(receita);
-        setExames(exames);
-    }
-    public void encerrarConsulta(){
-        if (receita == null || receita.trim().isEmpty()){
-            throw new IllegalArgumentException("Por favor, informe a receita");
-        }
-        if (exames.isEmpty()){
-            throw new IllegalArgumentException("Por favor, solicite os exames");
-        }
-    }
-    private static long gerarCodigo = 0;
+        this.sintomas = sintomas;
+        this.dataHora = dataHora;
+        this.valor = valor;
+            }
+
     public long getCodigo() {
         return codigo;
     }
 
     public Medico getMedico() {
-        if(medico == null){
-            throw new IllegalArgumentException("É necessário escolher um médico");
-        }else {
-            return medico;
-        }
+        return medico;
     }
 
     public Paciente getPaciente() {
@@ -64,9 +44,6 @@ public class Consulta {
     }
 
     public void setSintomas(String sintomas) {
-        if (sintomas == null || sintomas.trim().isEmpty()){
-            throw new IllegalArgumentException("Por favor, informe um sintoma");
-        }
         this.sintomas = sintomas;
     }
 
@@ -75,11 +52,10 @@ public class Consulta {
     }
 
     public void setDataHora(LocalDateTime dataHora) {
-        if (dataHora.isBefore(LocalDateTime.now())){
+        if (dataHora == null || dataHora.isBefore(LocalDateTime.now())){
             throw new IllegalArgumentException("Voce precisa escolher uma data/hora futura.");
         }
         this.dataHora = dataHora;
-
     }
 
     public double getValor() {
@@ -87,6 +63,9 @@ public class Consulta {
     }
 
     public void setValor(double valor) {
+        if (valor < 0) {
+            throw new IllegalArgumentException("Valor não pode ser negativo");
+        }
         this.valor = valor;
     }
 
@@ -95,14 +74,39 @@ public class Consulta {
     }
 
     public void setReceita(String receita) {
+        if (receita == null || receita.isBlank()) {
+            throw new IllegalArgumentException("Receita não pode ser nula ou vazia");
+        }
         this.receita = receita;
     }
-
-    public void setExames(List<String> exames) {
-        this.exames = (exames == null || exames.isEmpty()) ? List.of() : exames;
+    public void pedirExame(String exame) {
+        if (exame == null || exame.isBlank()) {
+            throw new IllegalArgumentException("Exame não pode ser nulo ou vazio");
+        }
+        exames.add(exame.trim());
+    }
+    public void pedirExames(String... exame) {
+        for (String e : exame) {
+            pedirExame(e);
+        }
     }
 
     public List<String> getExames() {
-        return (exames == null || exames.isEmpty()) ? List.of("Nenhum exame informado") : List.copyOf(exames);
+        return Collections.unmodifiableList(exames);
+    }
+    public void setExames(List<String> exames) {
+        // se a nova lista de exames é nula, defina uma nova lista vazia, caso contrário, defina a nova lista
+        this.exames = exames == null ? new ArrayList<>() : exames;
+    }
+    public boolean isAtendida() {
+        return (receita != null && !receita.isBlank() && exames != null && !exames.isEmpty());
+    }
+    @Override
+    public String toString() {
+        return "Consulta com " + medico.getNome() +
+                " para " + paciente.getNome() +
+                " às " + dataHora.toString() +
+                " | Motivo: " + sintomas;
     }
 }
+

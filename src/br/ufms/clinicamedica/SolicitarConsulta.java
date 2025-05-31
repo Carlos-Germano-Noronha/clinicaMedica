@@ -9,20 +9,7 @@ public class SolicitarConsulta {
     private LocalDateTime dataHoraSolicitada;
     private double valor;
 
-    public SolicitarConsulta(Medico medico, Paciente paciente, String sintomas, LocalDateTime dataHoraSolicitada, double valor){
-        if (medico == null || paciente == null) {
-            throw new IllegalArgumentException("Médico e paciente devem ser informados.");
-        }
-        if (sintomas == null || sintomas.trim().isEmpty()) {
-            throw new IllegalArgumentException("Sintomas devem ser informados.");
-        }
-        if (dataHoraSolicitada.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("A data da consulta deve ser futura.");
-        }
-        if (valor <= 0) {
-            throw new IllegalArgumentException("Valor da consulta deve ser positivo.");
-        }
-
+    public SolicitarConsulta(Medico medico, Paciente paciente, String sintomas, LocalDateTime dataHoraSolicitada){
         this.medico = medico;
         this.paciente = paciente;
         this.sintomas = sintomas;
